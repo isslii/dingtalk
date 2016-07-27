@@ -1,0 +1,24 @@
+{
+    "name": "cjango/dingtalk",
+    "description": "dingtalk sdk",
+    "keywords": ["cjango", "dingtalk", "sdk", "code"],
+    "homepage": "https://github.com/cjango/dingtalk",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jason.Chen",
+            "email": "chenjxlg@163.com",
+            "homepage": "http://www.cjango.com/"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "cjango\\": "src/"
+        }
+    }
+}
