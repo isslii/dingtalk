@@ -22,16 +22,8 @@ class Department extends Dingtalk
      */
     public static function lists()
     {
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = Token::get();
-        }
+        $result = Utils::get('department/list');
 
-        $params = [
-            'access_token' => $access_token,
-        ];
-
-        $result = Utils::api('department/list', $params);
         if (false !== $result) {
             return $result['department'];
         } else {
@@ -46,17 +38,12 @@ class Department extends Dingtalk
      */
     public static function info($id)
     {
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = Token::get();
-        }
-
         $params = [
-            'id'           => $id,
-            'access_token' => $access_token,
+            'id' => $id,
         ];
 
-        $result = Utils::api('department/get', $params);
+        $result = Utils::get('department/get', $params);
+
         if (false !== $result) {
             return $result;
         } else {
@@ -81,14 +68,8 @@ class Department extends Dingtalk
             ];
         }
 
-        $params = json_encode($params, JSON_UNESCAPED_UNICODE);
+        $result = Utils::post('department/create', $params);
 
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = Token::get();
-        }
-
-        $result = Utils::api('department/create?access_token=' . $access_token, $params, 'POST');
         if (false !== $result) {
             return $result['id'];
         } else {
@@ -113,14 +94,8 @@ class Department extends Dingtalk
             ];
         }
 
-        $params = json_encode($params, JSON_UNESCAPED_UNICODE);
+        $result = Utils::post('department/update', $params);
 
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = Token::get();
-        }
-
-        $result = Utils::api('department/update?access_token=' . $access_token, $params, 'POST');
         if (false !== $result) {
             return true;
         } else {
@@ -135,17 +110,12 @@ class Department extends Dingtalk
      */
     public static function delete($id)
     {
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = Token::get();
-        }
-
         $params = [
-            'id'           => $id,
-            'access_token' => $access_token,
+            'id' => $id,
         ];
 
-        $result = Utils::api('department/delete', $params);
+        $result = Utils::get('department/delete', $params);
+
         if (false !== $result) {
             return true;
         } else {
@@ -153,19 +123,19 @@ class Department extends Dingtalk
         }
     }
 
+    /**
+     * 获取部门用户USERID列表
+     * @param  integer $departmentId
+     * @return array|boolean
+     */
     public static function users($departmentId)
     {
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = Token::get();
-        }
-
         $params = [
             'department_id' => $departmentId,
-            'access_token'  => $access_token,
         ];
 
-        $result = Utils::api('user/simplelist', $params);
+        $result = Utils::get('user/simplelist', $params);
+
         if (false !== $result) {
             return $result['userlist'];
         } else {
@@ -173,19 +143,19 @@ class Department extends Dingtalk
         }
     }
 
+    /**
+     * 获取部门用户详情列表
+     * @param  [type] $departmentId [description]
+     * @return [type]               [description]
+     */
     public static function usersDetail($departmentId)
     {
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = Token::get();
-        }
-
         $params = [
             'department_id' => $departmentId,
-            'access_token'  => $access_token,
         ];
 
-        $result = Utils::api('user/list', $params);
+        $result = Utils::get('user/list', $params);
+
         if (false !== $result) {
             return $result['userlist'];
         } else {

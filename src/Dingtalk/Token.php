@@ -27,7 +27,8 @@ class Token extends Dingtalk
             'corpsecret' => parent::$config['corpsecret'],
         ];
 
-        $result = Utils::api('gettoken', $params);
+        $result = Utils::get('gettoken', $params, false);
+
         if (false !== $result) {
             return $result['access_token'];
         } else {
@@ -46,7 +47,8 @@ class Token extends Dingtalk
             'corpsecret' => parent::$config['ssosecret'],
         ];
 
-        $result = Utils::api('sso/gettoken', $params);
+        $result = Utils::get('sso/gettoken', $params, false);
+
         if (false !== $result) {
             return $result['access_token'];
         } else {
@@ -60,16 +62,8 @@ class Token extends Dingtalk
      */
     public static function jsapi()
     {
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = self::get();
-        }
+        $result = Utils::get('get_jsapi_ticket');
 
-        $params = [
-            'access_token' => $access_token,
-        ];
-
-        $result = Utils::api('get_jsapi_ticket', $params);
         if (false !== $result) {
             return $result['ticket'];
         } else {

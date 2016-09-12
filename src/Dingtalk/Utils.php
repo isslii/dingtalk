@@ -15,18 +15,61 @@ use cjango\Dingtalk;
  */
 class Utils extends Dingtalk
 {
+    /**
+     * GET 方式请求接口
+     * @param  string  $api
+     * @param  array   $params
+     * @param  boolean $token
+     * @return array|boolean
+     */
+    public static function get($api, $params = [], $token = true)
+    {
+        $url = Dingtalk::$baseUrl . $api;
+
+        if ($token === true) {
+            $access_token = Dingtalk::config('access_token');
+            if (empty($access_token)) {
+                $access_token = Token::get();
+            }
+
+            $params['access_token'] = $access_token;
+        }
+
+        $url .= '?' . http_build_query($params);
+
+        $result = self::http($url, 'GET', $params, Dingtalk::$headers);
+
+        if ($result !== false) {
+            $result = json_decode($result, true);
+            if ($result['errcode'] == 0) {
+                return $result;
+            } else {
+                Dingtalk::error($result['errmsg']);
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
     /**
-     * 钉钉接口调用
+     * POST 方式请求接口
+     * @param  string $api
+     * @param  array  $params
+     * @return array|boolean
      */
-    public static function api($apiUrl, $params = null, $method = 'GET')
+    public static function post($api, $params)
     {
-        $url    = parent::$baseUrl . $apiUrl;
-        $method = strtoupper($method);
-        if ($method == 'GET' && !empty($params) && is_array($params)) {
-            $url .= '?' . http_build_query($params);
+
+        $access_token = Dingtalk::config('access_token');
+        if (empty($access_token)) {
+            $access_token = Token::get();
         }
-        $result = self::http($url, $method, $params, parent::$headers);
+
+        $url = Dingtalk::$baseUrl . $api . '?access_token=' . $access_token;
+
+        $result = self::http($url, 'POST', json_encode($params, JSON_UNESCAPED_UNICODE), Dingtalk::$headers);
+
         if ($result !== false) {
             $result = json_decode($result, true);
             if ($result['errcode'] == 0) {

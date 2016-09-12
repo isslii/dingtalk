@@ -15,6 +15,27 @@ use cjango\Dingtalk;
  */
 class User extends Dingtalk
 {
+
+    /**
+     * 获取企业员工人数
+     * @param  integer $active  0:总数，1:已激活
+     * @return array|boolean
+     */
+    public static function count($active = 0)
+    {
+        $params = [
+            'onlyActive' => $active,
+        ];
+
+        $result = Utils::get('user/get_org_user_count', $params);
+
+        if (false !== $result) {
+            return $result['count'];
+        } else {
+            return false;
+        }
+    }
+
     /**
      * 获取用户详情
      * @param  string $userid 员工在企业内的UserID
@@ -22,17 +43,12 @@ class User extends Dingtalk
      */
     public static function get($userid)
     {
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = Token::get();
-        }
-
         $params = [
-            'userid'       => $userid,
-            'access_token' => $access_token,
+            'userid' => $userid,
         ];
 
-        $result = Utils::api('user/get', $params);
+        $result = Utils::get('user/get', $params);
+
         if (false !== $result) {
             return $result;
         } else {
@@ -55,16 +71,10 @@ class User extends Dingtalk
             'department' => $department,
         ];
 
-        $params = json_encode($params, JSON_UNESCAPED_UNICODE);
+        $result = Utils::post('user/create', $params);
 
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = Token::get();
-        }
-
-        $result = Utils::api('user/create?access_token=' . $access_token, $params, 'POST');
         if (false !== $result) {
-            return $result['id'];
+            return $result['userid'];
         } else {
             return false;
         }
@@ -89,17 +99,12 @@ class User extends Dingtalk
      */
     public static function delete($userid)
     {
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = Token::get();
-        }
-
         $params = [
-            'userid'       => $userid,
-            'access_token' => $access_token,
+            'userid' => $userid,
         ];
 
-        $result = Utils::api('user/delete', $params);
+        $result = Utils::get('user/delete', $params);
+
         if (false !== $result) {
             return true;
         } else {
@@ -108,7 +113,7 @@ class User extends Dingtalk
     }
 
     /**
-     * [batchDelete description]
+     * 批量删除用户
      * @param  array  $useridlist
      * @return boolean
      */
@@ -118,36 +123,23 @@ class User extends Dingtalk
             'useridlist' => $useridlist,
         ];
 
-        $params = json_encode($params, JSON_UNESCAPED_UNICODE);
+        $result = Utils::post('user/batchdelete', $params);
 
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = Token::get();
-        }
-
-        $result = Utils::api('user/batchdelete?access_token=' . $access_token, $params, 'POST');
         if (false !== $result) {
-            return $result['id'];
+            return true;
         } else {
             return false;
         }
     }
+
     /**
      * 获取管理员列表
      * @return array|boolean
      */
     public static function admin()
     {
-        $access_token = parent::$config['access_token'];
-        if (empty($access_token)) {
-            $access_token = Token::get();
-        }
+        $result = Utils::get('user/get_admin');
 
-        $params = [
-            'access_token' => $access_token,
-        ];
-
-        $result = Utils::api('user/get_admin', $params);
         if (false !== $result) {
             return $result['adminList'];
         } else {
