@@ -34,14 +34,21 @@ class Dingtalk
     ];
 
     /**
+     * 错误信息
+     * @var null
+     */
+    protected static $error = null;
+
+    /**
      * 钉钉的配置信息
      * @var array
      */
     protected static $config = [
-        'agentid'    => '',
-        'corpid'     => '',
-        'corpsecret' => '',
-        'ssosecret'  => '',
+        'agentid'      => '',
+        'corpid'       => '',
+        'corpsecret'   => '',
+        'ssosecret'    => '',
+        'access_token' => '',
     ];
 
     /**
@@ -119,5 +126,19 @@ class Dingtalk
         ksort($signArr);
         $signStr = urldecode(http_build_query($signArr));
         return sha1($signStr);
+    }
+
+    /**
+     * 设置/获取 错误信息
+     * @param  string $msg
+     * @return string
+     */
+    public static function error($msg = null)
+    {
+        if (!is_null($msg)) {
+            self::$error = $msg;
+        } else {
+            return self::$error;
+        }
     }
 }

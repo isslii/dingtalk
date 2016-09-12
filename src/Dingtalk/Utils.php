@@ -19,16 +19,22 @@ class Utils extends Dingtalk
     /**
      * 钉钉接口调用
      */
-    public function api($apiUrl, $params = null, $method = 'GET')
+    public static function api($apiUrl, $params = null, $method = 'GET')
     {
         $url    = parent::$baseUrl . $apiUrl;
         $method = strtoupper($method);
         if ($method == 'GET' && !empty($params) && is_array($params)) {
             $url .= '?' . http_build_query($params);
         }
-        $result = self::https($url, $method, $params, ['Content-Type' => 'application/json']);
+        $result = self::http($url, $method, $params, parent::$headers);
         if ($result !== false) {
-            return self::$result = json_decode($result, true);
+            $result = json_decode($result, true);
+            if ($result['errcode'] == 0) {
+                return $result;
+            } else {
+                Dingtalk::error($result['errmsg']);
+                return false;
+            }
         } else {
             return false;
         }
@@ -81,7 +87,8 @@ class Utils extends Dingtalk
         $err  = curl_errno($ch);
         curl_close($ch);
         if ($err > 0) {
-            return curl_error($ch);
+            Dingtalk::error(curl_error($ch));
+            return false;
         } else {
             return $data;
         }

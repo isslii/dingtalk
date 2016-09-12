@@ -18,9 +18,9 @@ class Token extends Dingtalk
 
     /**
      * 获取ACCESS_TOKEN
-     * @return string
+     * @return string|boolean
      */
-    public function get()
+    public static function get()
     {
         $params = [
             'corpid'     => parent::$config['corpid'],
@@ -28,11 +28,52 @@ class Token extends Dingtalk
         ];
 
         $result = Utils::api('gettoken', $params);
-        return self::$result['access_token'];
+        if (false !== $result) {
+            return $result['access_token'];
+        } else {
+            return false;
+        }
     }
 
-    public function jsapi()
+    /**
+     * 获取 免登SsoToken
+     * @return string|boolean
+     */
+    public static function sso()
     {
-        #Todo..
+        $params = [
+            'corpid'     => parent::$config['corpid'],
+            'corpsecret' => parent::$config['ssosecret'],
+        ];
+
+        $result = Utils::api('sso/gettoken', $params);
+        if (false !== $result) {
+            return $result['access_token'];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 获取jsapi_ticket
+     * @return string|boolean
+     */
+    public static function jsapi()
+    {
+        $access_token = parent::$config['access_token'];
+        if (empty($access_token)) {
+            $access_token = self::get();
+        }
+
+        $params = [
+            'access_token' => $access_token,
+        ];
+
+        $result = Utils::api('get_jsapi_ticket', $params);
+        if (false !== $result) {
+            return $result['ticket'];
+        } else {
+            return false;
+        }
     }
 }
