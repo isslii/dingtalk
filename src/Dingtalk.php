@@ -17,13 +17,13 @@ class Dingtalk
      * 钉钉实例
      * @var object
      */
-    protected static $instance;
+    protected static $instance = null;
 
     /**
      * 接口调用地址
      * @var string
      */
-    protected static $apiUrl = 'https://oapi.dingtalk.com/';
+    protected static $baseUrl = 'https://oapi.dingtalk.com/';
 
     /**
      * 请求头信息
@@ -44,6 +44,10 @@ class Dingtalk
         'ssosecret'  => '',
     ];
 
+    /**
+     * 实例化钉钉SDK
+     * @param array $config 配置信息
+     */
     public function __construct($config = [])
     {
         if (!empty($config) && is_array($config)) {
@@ -100,10 +104,8 @@ class Dingtalk
 
     /**
      * 钉钉签名算法
-     * @param  string $jsapi_ticket
      * @param  string $noncestr
      * @param  string $timestamp
-     * @param  string $url
      * @return string
      */
     private static function sign($noncestr, $timestamp)

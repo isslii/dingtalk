@@ -21,7 +21,7 @@ class Utils extends Dingtalk
      */
     public function api($apiUrl, $params = null, $method = 'GET')
     {
-        $url    = parent::BASE_URL . $apiUrl;
+        $url    = parent::$baseUrl . $apiUrl;
         $method = strtoupper($method);
         if ($method == 'GET' && !empty($params) && is_array($params)) {
             $url .= '?' . http_build_query($params);
@@ -42,7 +42,7 @@ class Utils extends Dingtalk
      * @param  array  $header     请求头
      * @return mixed              返回数据
      */
-    public static function http($url, $method = "GET", $postFields = null, $headers = null)
+    public static function http($url, $method = 'GET', $postFields = null, $headers = null)
     {
         $method = strtoupper($method);
         if (!in_array($method, ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'])) {
@@ -62,7 +62,7 @@ class Utils extends Dingtalk
             $opts[CURLOPT_POSTFIELDS] = $postFields;
         }
 
-        if (strlen($url) > 5 && strtolower(substr($url, 0, 5)) == "https") {
+        if (strlen($url) > 5 && strtolower(substr($url, 0, 5)) == 'https') {
             $opts[CURLOPT_SSL_VERIFYPEER] = false;
             $opts[CURLOPT_SSL_VERIFYHOST] = false;
         }
@@ -70,7 +70,7 @@ class Utils extends Dingtalk
         if (!empty($headers) && is_array($headers)) {
             $httpHeaders = [];
             foreach ($headers as $key => $value) {
-                array_push($httpHeaders, $key . ":" . $value);
+                array_push($httpHeaders, $key . ':' . $value);
             }
             $opts[CURLOPT_HTTPHEADER] = $httpHeaders;
         }
