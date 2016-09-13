@@ -146,4 +146,26 @@ class User extends Dingtalk
             return false;
         }
     }
+
+    /**
+     * 通过CODE换取用户身份
+     * @param  string $code requestAuthCode接口中获取的CODE
+     * @return array|boolean
+     */
+    public static function code($code)
+    {
+        $params = [
+            'code' => $code,
+        ];
+
+        $result = Utils::post('user/getuserinfo', $params);
+
+        if (false !== $result) {
+            unset($result['errcode']);
+            unset($result['errmsg']);
+            return $result;
+        } else {
+            return false;
+        }
+    }
 }

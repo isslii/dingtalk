@@ -15,13 +15,19 @@ use cjango\Dingtalk;
  */
 class Message extends Dingtalk
 {
+
     /**
      * 发送企业会话消息
+     * @param  [type] $touser  [description]
+     * @param  [type] $agentid [description]
+     * @param  [type] $msgtype [description]
+     * @param  [type] $msgbody [description]
+     * @return [type]          [description]
      */
     public static function send($touser, $agentid, $msgtype, $msgbody)
     {
         $params = [
-            'touser'  => '',
+            'touser'  => $touser,
             'agentid' => $agentid,
             'msgtype' => $msgtype,
             $msgbody,
@@ -55,6 +61,32 @@ class Message extends Dingtalk
             unset($result['errcode']);
             unset($result['errmsg']);
             return $result;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 发送普通会话消息
+     * @param  [type] $sender  [description]
+     * @param  [type] $cid     [description]
+     * @param  [type] $msgtype [description]
+     * @param  [type] $msgbody [description]
+     * @return [type]          [description]
+     */
+    public static function common($sender, $cid, $msgtype, $msgbody)
+    {
+        $params = [
+            'sender'  => $sender,
+            'cid'     => $cid,
+            'msgtype' => $msgtype,
+            $msgbody,
+        ];
+
+        $result = Utils::post('message/send_to_conversation', $params);
+
+        if (false !== $result) {
+            return $result['receiver'];
         } else {
             return false;
         }
