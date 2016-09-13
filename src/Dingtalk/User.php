@@ -150,7 +150,7 @@ class User extends Dingtalk
     /**
      * 通过CODE换取用户身份
      * @param  string $code requestAuthCode接口中获取的CODE
-     * @return array|boolean
+     * @return string|boolean
      */
     public static function code($code)
     {
@@ -158,12 +158,10 @@ class User extends Dingtalk
             'code' => $code,
         ];
 
-        $result = Utils::post('user/getuserinfo', $params);
+        $result = Utils::get('user/getuserinfo', $params);
 
         if (false !== $result) {
-            unset($result['errcode']);
-            unset($result['errmsg']);
-            return $result;
+            return $result['userid'];
         } else {
             return false;
         }
