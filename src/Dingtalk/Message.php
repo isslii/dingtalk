@@ -30,7 +30,7 @@ class Message extends Dingtalk
             'touser'  => $touser,
             'agentid' => $agentid,
             'msgtype' => $msgtype,
-            $msgbody,
+            $msgtype => $msgbody,
         ];
 
         $result = Utils::post('message/send', $params);
